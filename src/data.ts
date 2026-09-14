@@ -2,29 +2,29 @@ import { Product, BlogPost, FAQItem } from './types';
 
 // High-resolution clean studio product-only asset paths
 export const DNYL_ASSETS = {
-  hero: '/src/assets/images/square_sunglasses_1789315866048.jpg',
+  hero: '/images/square_sunglasses_1789315866048.jpg',
   // Product 1: Maverick Aviator
-  aviator: '/src/assets/images/aviator_sunglasses_1789315829245.jpg',
-  aviatorSide: '/src/assets/images/aviator_product_side_1789351251873.jpg',
-  aviatorSilverBlue: '/src/assets/images/aviator_silver_blue_1789351670910.jpg',
+  aviator: '/images/aviator_sunglasses_1789315829245.jpg',
+  aviatorSide: '/images/aviator_product_side_1789351251873.jpg',
+  aviatorSilverBlue: '/images/aviator_silver_blue_1789351670910.jpg',
   // Product 2: Nomad Wayfarer
-  wayfarer: '/src/assets/images/wayfarer_sunglasses_1789315849540.jpg',
-  wayfarerSide: '/src/assets/images/wayfarer_product_side_1789351271290.jpg',
-  wayfarerTortoise: '/src/assets/images/wayfarer_tortoise_bronze_1789351689505.jpg',
+  wayfarer: '/images/wayfarer_sunglasses_1789315849540.jpg',
+  wayfarerSide: '/images/wayfarer_product_side_1789351271290.jpg',
+  wayfarerTortoise: '/images/wayfarer_tortoise_bronze_1789351689505.jpg',
   // Product 3: Stealth Square
-  square: '/src/assets/images/square_sunglasses_1789315866048.jpg',
-  squareSide: '/src/assets/images/square_product_side_1789351283644.jpg',
-  squareCrystalSlate: '/src/assets/images/square_crystal_slate_1789351706658.jpg',
+  square: '/images/square_sunglasses_1789315866048.jpg',
+  squareSide: '/images/square_product_side_1789351283644.jpg',
+  squareCrystalSlate: '/images/square_crystal_slate_1789351706658.jpg',
   // Product 4: Aura Round
-  round: '/src/assets/images/round_sunglasses_1789315879719.jpg',
-  roundSide: '/src/assets/images/round_product_side_1789351297341.jpg',
-  roundGoldRose: '/src/assets/images/round_gold_rose_1789351720058.jpg',
+  round: '/images/round_sunglasses_1789315879719.jpg',
+  roundSide: '/images/round_product_side_1789351297341.jpg',
+  roundGoldRose: '/images/round_gold_rose_1789351720058.jpg',
   // Product 5: Karachi Club
-  karachiTortoise: '/src/assets/images/wayfarer_tortoise_bronze_1789351689505.jpg',
-  karachiJetBlack: '/src/assets/images/karachi_jet_black_1789351737286.jpg',
+  karachiTortoise: '/images/wayfarer_tortoise_bronze_1789351689505.jpg',
+  karachiJetBlack: '/images/karachi_jet_black_1789351737286.jpg',
   // Product 6: Legacy Limitless
-  legacyObsidianGold: '/src/assets/images/square_sunglasses_1789315866048.jpg',
-  legacyPlatinumSilver: '/src/assets/images/legacy_platinum_silver_1789351756918.jpg'
+  legacyObsidianGold: '/images/square_sunglasses_1789315866048.jpg',
+  legacyPlatinumSilver: '/images/legacy_platinum_silver_1789351756918.jpg'
 };
 
 export const FALLBACK_PRODUCTS: Product[] = [

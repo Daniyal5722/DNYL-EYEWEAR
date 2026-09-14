@@ -22,9 +22,9 @@ const SERVER_PRODUCTS = [
     priceRange: { minVariantPrice: { amount: '4999', currencyCode: 'PKR' } },
     compareAtPriceRange: { minVariantPrice: { amount: '6999', currencyCode: 'PKR' } },
     images: [
-      { url: '/src/assets/images/aviator_sunglasses_1789315829245.jpg', altText: 'DNYL Maverick Aviator Titanium Gold - Studio Front' },
-      { url: '/src/assets/images/aviator_product_side_1789351251873.jpg', altText: 'DNYL Maverick Aviator Titanium Gold - Studio Angle' },
-      { url: '/src/assets/images/aviator_silver_blue_1789351670910.jpg', altText: 'DNYL Maverick Aviator Matte Silver / Cobalt Blue - Second Colourway' }
+      { url: '/images/aviator_sunglasses_1789315829245.jpg', altText: 'DNYL Maverick Aviator Titanium Gold - Studio Front' },
+      { url: '/images/aviator_product_side_1789351251873.jpg', altText: 'DNYL Maverick Aviator Titanium Gold - Studio Angle' },
+      { url: '/images/aviator_silver_blue_1789351670910.jpg', altText: 'DNYL Maverick Aviator Matte Silver / Cobalt Blue - Second Colourway' }
     ],
     variants: [
       { 
@@ -34,7 +34,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '4999', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '6999', currencyCode: 'PKR' },
         colorHex: '#D4AF37',
-        image: { url: '/src/assets/images/aviator_sunglasses_1789315829245.jpg', altText: 'Titanium Gold Edition' }
+        image: { url: '/images/aviator_sunglasses_1789315829245.jpg', altText: 'Titanium Gold Edition' }
       },
       { 
         id: 'var_1_silver_blue', 
@@ -43,7 +43,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '4999', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '6999', currencyCode: 'PKR' },
         colorHex: '#2563EB',
-        image: { url: '/src/assets/images/aviator_silver_blue_1789351670910.jpg', altText: 'Matte Silver / Cobalt Blue Edition' }
+        image: { url: '/images/aviator_silver_blue_1789351670910.jpg', altText: 'Matte Silver / Cobalt Blue Edition' }
       }
     ],
     options: [
@@ -75,9 +75,9 @@ const SERVER_PRODUCTS = [
     priceRange: { minVariantPrice: { amount: '3999', currencyCode: 'PKR' } },
     compareAtPriceRange: { minVariantPrice: { amount: '5499', currencyCode: 'PKR' } },
     images: [
-      { url: '/src/assets/images/wayfarer_sunglasses_1789315849540.jpg', altText: 'DNYL Nomad Wayfarer Gloss Black - Studio Front' },
-      { url: '/src/assets/images/wayfarer_product_side_1789351271290.jpg', altText: 'DNYL Nomad Wayfarer Gloss Black - Studio Angle' },
-      { url: '/src/assets/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'DNYL Nomad Wayfarer Havana Tortoise - Second Colourway' }
+      { url: '/images/wayfarer_sunglasses_1789315849540.jpg', altText: 'DNYL Nomad Wayfarer Gloss Black - Studio Front' },
+      { url: '/images/wayfarer_product_side_1789351271290.jpg', altText: 'DNYL Nomad Wayfarer Gloss Black - Studio Angle' },
+      { url: '/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'DNYL Nomad Wayfarer Havana Tortoise - Second Colourway' }
     ],
     variants: [
       { 
@@ -87,7 +87,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '3999', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '5499', currencyCode: 'PKR' },
         colorHex: '#111827',
-        image: { url: '/src/assets/images/wayfarer_sunglasses_1789315849540.jpg', altText: 'Gloss Black Edition' }
+        image: { url: '/images/wayfarer_sunglasses_1789315849540.jpg', altText: 'Gloss Black Edition' }
       },
       { 
         id: 'var_2_tortoise', 
@@ -96,7 +96,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '4299', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '5799', currencyCode: 'PKR' },
         colorHex: '#854D0E',
-        image: { url: '/src/assets/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'Havana Tortoise Edition' }
+        image: { url: '/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'Havana Tortoise Edition' }
       }
     ],
     options: [
@@ -127,9 +127,9 @@ const SERVER_PRODUCTS = [
     priceRange: { minVariantPrice: { amount: '5499', currencyCode: 'PKR' } },
     compareAtPriceRange: null,
     images: [
-      { url: '/src/assets/images/square_sunglasses_1789315866048.jpg', altText: 'DNYL Stealth Square Obsidian Black - Studio Front' },
-      { url: '/src/assets/images/square_product_side_1789351283644.jpg', altText: 'DNYL Stealth Square Obsidian Black - Studio Angle' },
-      { url: '/src/assets/images/square_crystal_slate_1789351706658.jpg', altText: 'DNYL Stealth Square Smoky Crystal / Slate - Second Colourway' }
+      { url: '/images/square_sunglasses_1789315866048.jpg', altText: 'DNYL Stealth Square Obsidian Black - Studio Front' },
+      { url: '/images/square_product_side_1789351283644.jpg', altText: 'DNYL Stealth Square Obsidian Black - Studio Angle' },
+      { url: '/images/square_crystal_slate_1789351706658.jpg', altText: 'DNYL Stealth Square Smoky Crystal / Slate - Second Colourway' }
     ],
     variants: [
       { 
@@ -138,7 +138,7 @@ const SERVER_PRODUCTS = [
         availableForSale: true, 
         price: { amount: '5499', currencyCode: 'PKR' },
         colorHex: '#09090B',
-        image: { url: '/src/assets/images/square_sunglasses_1789315866048.jpg', altText: 'Obsidian Black Edition' }
+        image: { url: '/images/square_sunglasses_1789315866048.jpg', altText: 'Obsidian Black Edition' }
       },
       { 
         id: 'var_3_crystal', 
@@ -146,7 +146,7 @@ const SERVER_PRODUCTS = [
         availableForSale: true, 
         price: { amount: '5499', currencyCode: 'PKR' },
         colorHex: '#64748B',
-        image: { url: '/src/assets/images/square_crystal_slate_1789351706658.jpg', altText: 'Smoky Crystal Edition' }
+        image: { url: '/images/square_crystal_slate_1789351706658.jpg', altText: 'Smoky Crystal Edition' }
       }
     ],
     options: [
@@ -175,9 +175,9 @@ const SERVER_PRODUCTS = [
     priceRange: { minVariantPrice: { amount: '4499', currencyCode: 'PKR' } },
     compareAtPriceRange: { minVariantPrice: { amount: '5999', currencyCode: 'PKR' } },
     images: [
-      { url: '/src/assets/images/round_sunglasses_1789315879719.jpg', altText: 'DNYL Aura Round Gunmetal Silver - Studio Front' },
-      { url: '/src/assets/images/round_product_side_1789351297341.jpg', altText: 'DNYL Aura Round Gunmetal Silver - Studio Angle' },
-      { url: '/src/assets/images/round_gold_rose_1789351720058.jpg', altText: 'DNYL Aura Round Champagne Gold / Rose - Second Colourway' }
+      { url: '/images/round_sunglasses_1789315879719.jpg', altText: 'DNYL Aura Round Gunmetal Silver - Studio Front' },
+      { url: '/images/round_product_side_1789351297341.jpg', altText: 'DNYL Aura Round Gunmetal Silver - Studio Angle' },
+      { url: '/images/round_gold_rose_1789351720058.jpg', altText: 'DNYL Aura Round Champagne Gold / Rose - Second Colourway' }
     ],
     variants: [
       { 
@@ -187,7 +187,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '4499', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '5999', currencyCode: 'PKR' },
         colorHex: '#94A3B8',
-        image: { url: '/src/assets/images/round_sunglasses_1789315879719.jpg', altText: 'Gunmetal Silver Edition' }
+        image: { url: '/images/round_sunglasses_1789315879719.jpg', altText: 'Gunmetal Silver Edition' }
       },
       { 
         id: 'var_4_gold_rose', 
@@ -196,7 +196,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '4699', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '6199', currencyCode: 'PKR' },
         colorHex: '#E2B170',
-        image: { url: '/src/assets/images/round_gold_rose_1789351720058.jpg', altText: 'Champagne Gold Rose Edition' }
+        image: { url: '/images/round_gold_rose_1789351720058.jpg', altText: 'Champagne Gold Rose Edition' }
       }
     ],
     options: [
@@ -225,8 +225,8 @@ const SERVER_PRODUCTS = [
     priceRange: { minVariantPrice: { amount: '5999', currencyCode: 'PKR' } },
     compareAtPriceRange: { minVariantPrice: { amount: '7999', currencyCode: 'PKR' } },
     images: [
-      { url: '/src/assets/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'DNYL Karachi Club Clifton Tortoise - Studio Front' },
-      { url: '/src/assets/images/karachi_jet_black_1789351737286.jpg', altText: 'DNYL Karachi Club Jet Black / Sapphire - Second Colourway' }
+      { url: '/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'DNYL Karachi Club Clifton Tortoise - Studio Front' },
+      { url: '/images/karachi_jet_black_1789351737286.jpg', altText: 'DNYL Karachi Club Jet Black / Sapphire - Second Colourway' }
     ],
     variants: [
       { 
@@ -236,7 +236,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '5999', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '7999', currencyCode: 'PKR' },
         colorHex: '#78350F',
-        image: { url: '/src/assets/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'Clifton Tortoise Edition' }
+        image: { url: '/images/wayfarer_tortoise_bronze_1789351689505.jpg', altText: 'Clifton Tortoise Edition' }
       },
       { 
         id: 'var_5_black_sapphire', 
@@ -245,7 +245,7 @@ const SERVER_PRODUCTS = [
         price: { amount: '5999', currencyCode: 'PKR' }, 
         compareAtPrice: { amount: '7999', currencyCode: 'PKR' },
         colorHex: '#1E3A8A',
-        image: { url: '/src/assets/images/karachi_jet_black_1789351737286.jpg', altText: 'Karachi Jet Black Edition' }
+        image: { url: '/images/karachi_jet_black_1789351737286.jpg', altText: 'Karachi Jet Black Edition' }
       }
     ],
     options: [
@@ -273,8 +273,8 @@ const SERVER_PRODUCTS = [
     priceRange: { minVariantPrice: { amount: '7999', currencyCode: 'PKR' } },
     compareAtPriceRange: null,
     images: [
-      { url: '/src/assets/images/square_sunglasses_1789315866048.jpg', altText: 'DNYL Legacy Premium Obsidian Gold - Studio Front' },
-      { url: '/src/assets/images/legacy_platinum_silver_1789351756918.jpg', altText: 'DNYL Legacy Premium Platinum Silver - Second Colourway' }
+      { url: '/images/square_sunglasses_1789315866048.jpg', altText: 'DNYL Legacy Premium Obsidian Gold - Studio Front' },
+      { url: '/images/legacy_platinum_silver_1789351756918.jpg', altText: 'DNYL Legacy Premium Platinum Silver - Second Colourway' }
     ],
     variants: [
       { 
@@ -283,7 +283,7 @@ const SERVER_PRODUCTS = [
         availableForSale: true, 
         price: { amount: '7999', currencyCode: 'PKR' },
         colorHex: '#D4AF37',
-        image: { url: '/src/assets/images/square_sunglasses_1789315866048.jpg', altText: 'Obsidian Black Gold Edition' }
+        image: { url: '/images/square_sunglasses_1789315866048.jpg', altText: 'Obsidian Black Gold Edition' }
       },
       { 
         id: 'var_6_silver', 
@@ -291,7 +291,7 @@ const SERVER_PRODUCTS = [
         availableForSale: true, 
         price: { amount: '8499', currencyCode: 'PKR' },
         colorHex: '#E2E8F0',
-        image: { url: '/src/assets/images/legacy_platinum_silver_1789351756918.jpg', altText: 'Platinum Silver Edition' }
+        image: { url: '/images/legacy_platinum_silver_1789351756918.jpg', altText: 'Platinum Silver Edition' }
       }
     ],
     options: [

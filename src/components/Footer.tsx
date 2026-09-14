@@ -40,8 +40,8 @@ export default function Footer({ onNavigate, whatsappNumber }: FooterProps) {
               onClick={() => onNavigate('home')}
               className="flex flex-col items-start justify-center group focus:outline-none mb-4"
             >
-              <span className="text-3xl font-extrabold tracking-[0.3em] text-white">DNYL</span>
-              <span className="text-[9px] tracking-[0.6em] font-medium text-zinc-500 mt-[-2px] ml-[0.3em]">EYEWEAR</span>
+              <span className="text-3xl sm:text-4xl font-semibold tracking-[0.25em] text-white font-display">DNYL</span>
+              <span className="text-[9px] tracking-[0.6em] font-medium text-zinc-400 mt-[-2px] ml-[0.3em] font-sans">EYEWEAR</span>
             </button>
             <p className="text-sm text-zinc-400 max-w-sm font-light mt-2 leading-relaxed">
               DNYL is derived from Daniyal. Based in Karachi, Pakistan, DNYL is about confidence, individuality, and seeing the world differently.

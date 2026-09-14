@@ -83,10 +83,10 @@ export default function Header({
               onClick={() => onNavigate('home')}
               className="flex flex-col items-center md:items-start justify-center group focus:outline-none"
             >
-              <span className="text-xl sm:text-2xl font-black tracking-[0.28em] text-black transition-all group-hover:tracking-[0.32em] font-sans">
+              <span className="text-2xl sm:text-3xl font-semibold tracking-[0.25em] text-black transition-all group-hover:tracking-[0.28em] font-display">
                 DNYL
               </span>
-              <span className="text-[7.5px] tracking-[0.55em] font-semibold text-gray-500 mt-[-3px] ml-[0.3em]">
+              <span className="text-[7.5px] tracking-[0.55em] font-medium text-gray-500 mt-[-2px] ml-[0.3em] font-sans">
                 EYEWEAR
               </span>
             </button>
@@ -207,8 +207,8 @@ export default function Header({
               <div>
                 <div className="flex items-center justify-between pb-6 border-b border-gray-100">
                   <div className="flex flex-col">
-                    <span className="text-xl font-black tracking-[0.25em] font-sans">DNYL</span>
-                    <span className="text-[7px] tracking-[0.55em] font-bold text-gray-500 mt-[-2px] ml-[0.3em]">EYEWEAR</span>
+                    <span className="text-2xl font-semibold tracking-[0.25em] font-display">DNYL</span>
+                    <span className="text-[7.5px] tracking-[0.55em] font-medium text-gray-500 mt-[-2px] ml-[0.3em] font-sans">EYEWEAR</span>
                   </div>
                   <button
                     id="mobile-nav-close"

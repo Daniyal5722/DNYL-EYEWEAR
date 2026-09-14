@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+/* 1. Immersive Premium Custom Vignette & Grid Layering */
+.bg-radial-vignette {
+  background: radial-gradient(circle, transparent 20%, rgba(6, 6, 8, 0.85) 100%);
+}
+
+/* 2. Glassmorphic Surface Cards & Modals */
+.glass-panel-dark {
+  background: rgba(18, 18, 24, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* 3. Smooth Elastic Hover & Active Motion Constants */
+.transition-luxury {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 4. Fine Focus Indicators for WCAG Accessibility */
+button:focus-visible, 
+a:focus-visible, 
+input:focus-visible {
+  outline: 2px solid rgb(0, 0, 0);
+  outline-offset: 4px;
+}
+
+/* Disable core animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}

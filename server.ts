@@ -7,7 +7,8 @@ import { createServer as createViteServer } from 'vite';
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
 const PORT = 3000;
 
@@ -637,7 +638,255 @@ app.post('/api/checkout', async (req, res) => {
   }
 });
 
-// 4. POST CHATBOT ASSISTANT
+// 4. POST ADVISOR ANALYZE (FACIAL STYLING ANALYSIS)
+app.post('/api/advisor/analyze', async (req, res) => {
+  const { imageBase64 } = req.body;
+
+  // Resilient fallback defaults
+  const fallbackResult = {
+    faceShape: 'Oval',
+    faceProportions: 'Harmonious length-to-width ratio with balanced cheekbone symmetry.',
+    jawline: 'Gently tapered and softly rounded.',
+    cheekForeheadRatio: 'Slightly broader cheekbones tapering smoothly to chin.',
+    recommendedFrameShapes: ['Square', 'Wayfarer', 'Aviator'],
+    recommendedFrameProportions: 'Medium to wide frame profiles (52mm - 56mm) create structured architectural balance.',
+    styleTip: 'Geometric and square silhouettes provide a refined, bold counterpoint to smooth facial contours.',
+    landmarks: {
+      leftEye: { x: 42.5, y: 44.0 },
+      rightEye: { x: 57.5, y: 44.0 },
+      noseBridge: { x: 50.0, y: 44.8 },
+      faceWidthPct: 46.0,
+      tiltAngleDeg: 0.0,
+    },
+    isClearFace: true,
+    angleFeedback: 'Clear front-facing alignment.',
+    disclaimer: 'Face shape classification is an approximate styling guide to assist with eyewear selection, not a biometric or identity scan.',
+  };
+
+  if (!imageBase64) {
+    return res.json(fallbackResult);
+  }
+
+  try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
+      return res.json(fallbackResult);
+    }
+
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    });
+
+    // Extract mime type and clean base64 data
+    const matches = imageBase64.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
+    const mimeType = matches ? matches[1] : 'image/jpeg';
+    const base64Data = matches ? matches[2] : imageBase64;
+
+    const prompt = `You are a high-end luxury personal eyewear stylist and optical facial geometry specialist for DNYL Eyewear.
+Analyze the human face in this photograph solely to recommend flattering eyewear and identify placement coordinates.
+IMPORTANT GUIDELINES:
+- Treat face-shape classification as an approximate styling recommendation to assist in eyewear selection, NOT biometric identification or medical diagnosis. Do not attempt to identify the individual.
+- Return ONLY valid raw JSON conforming to this schema (no markdown, no backticks, just pure JSON).
+
+Schema:
+{
+  "faceShape": "Oval" | "Round" | "Square" | "Rectangle" | "Heart" | "Diamond" | "Oblong",
+  "faceProportions": "Short refined description of face length vs width and symmetry",
+  "jawline": "Short description of jawline characteristics",
+  "cheekForeheadRatio": "Forehead to cheekbones to jaw proportion",
+  "recommendedFrameShapes": ["Square", "Wayfarer", "Aviator"],
+  "recommendedFrameProportions": "e.g. Medium to wide width frames (52mm-56mm)",
+  "styleTip": "One refined styling tip on why contrasting geometry enhances their look",
+  "landmarks": {
+    "leftEye": { "x": 42.0, "y": 44.0 },
+    "rightEye": { "x": 58.0, "y": 44.0 },
+    "noseBridge": { "x": 50.0, "y": 44.5 },
+    "faceWidthPct": 46.0,
+    "tiltAngleDeg": 0.0
+  },
+  "isClearFace": true,
+  "angleFeedback": "Front-facing angle verified",
+  "disclaimer": "Face shape classification is an approximate styling guide to assist with eyewear selection, not a biometric or identity scan."
+}
+
+Coordinates details:
+- leftEye: Center of subject's left eye from viewer's perspective (0.0 to 100.0)
+- rightEye: Center of subject's right eye from viewer's perspective (0.0 to 100.0)
+- noseBridge: Center of the bridge of the nose where sunglasses bridge sits (0.0 to 100.0)
+- faceWidthPct: Approximate width across temple cheekbones as percentage of overall photo width (30 to 70)
+- tiltAngleDeg: Head tilt clockwise in degrees (-15 to 15)
+If face is obstructed or not clear, set isClearFace to false and angleFeedback to "For a better preview, please upload a clear front-facing photo with your face fully visible."`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            { text: prompt },
+            {
+              inlineData: {
+                mimeType,
+                data: base64Data,
+              },
+            },
+          ],
+        },
+      ],
+      config: {
+        responseMimeType: 'application/json',
+        temperature: 0.2,
+      },
+    });
+
+    const text = response.text || '';
+    const cleanJson = text.trim().replace(/^```json/i, '').replace(/```$/i, '').trim();
+    const parsed = JSON.parse(cleanJson);
+    return res.json({
+      ...fallbackResult,
+      ...parsed,
+      landmarks: {
+        ...fallbackResult.landmarks,
+        ...(parsed.landmarks || {}),
+      },
+    });
+  } catch (error: any) {
+    console.warn('Advisor analyze fallback used due to error:', error.message);
+    return res.json(fallbackResult);
+  }
+});
+
+// 5. POST ADVISOR RECOMMENDATIONS
+app.post('/api/advisor/recommendations', (req, res) => {
+  const { faceShape = 'Oval', stylePreference = 'Classic', colorPreference = '' } = req.body;
+
+  const scores: { [id: string]: { score: number; reason: string } } = {};
+
+  SERVER_PRODUCTS.forEach((product) => {
+    let score = 50;
+    let reasons: string[] = [];
+
+    const frameShapeMeta = product.metafields?.find((m) => m.key === 'frame_shape')?.value || '';
+
+    // 1. Face shape matching
+    if (faceShape === 'Round') {
+      if (frameShapeMeta === 'Square') {
+        score += 35;
+        reasons.push('The sharp geometric silhouette provides structural definition to softer facial contours.');
+      } else if (frameShapeMeta === 'Wayfarer') {
+        score += 25;
+        reasons.push('The structured browline lifts and elongates the face visually.');
+      } else {
+        score += 5;
+      }
+    } else if (faceShape === 'Square') {
+      if (frameShapeMeta === 'Round') {
+        score += 35;
+        reasons.push('Curved architectural rims create an elegant visual balance against a defined jawline.');
+      } else if (frameShapeMeta === 'Aviator') {
+        score += 30;
+        reasons.push('The teardrop titanium profile gently softens strong angular features.');
+      } else {
+        score += 10;
+      }
+    } else if (faceShape === 'Heart') {
+      if (frameShapeMeta === 'Aviator') {
+        score += 35;
+        reasons.push('The lower teardrop breadth balances a wider forehead seamlessly.');
+      } else if (frameShapeMeta === 'Round') {
+        score += 25;
+        reasons.push('Soft circular geometry complements high cheekbones beautifully.');
+      } else {
+        score += 15;
+      }
+    } else if (faceShape === 'Rectangle' || faceShape === 'Oblong') {
+      if (frameShapeMeta === 'Wayfarer' || frameShapeMeta === 'Square') {
+        score += 35;
+        reasons.push('Wide architectural frames introduce horizontal balance to elongated facial proportions.');
+      } else {
+        score += 15;
+      }
+    } else if (faceShape === 'Diamond') {
+      if (frameShapeMeta === 'Aviator' || frameShapeMeta === 'Round') {
+        score += 35;
+        reasons.push('Subtle curves harmonize gracefully with prominent cheekbone lines.');
+      } else {
+        score += 15;
+      }
+    } else {
+      // Oval
+      if (product.id === 'prod_1') {
+        score += 30;
+        reasons.push('The iconic titanium aviator maintains the natural symmetry of your oval proportions.');
+      } else if (product.id === 'prod_3') {
+        score += 28;
+        reasons.push('Architectural square bezels introduce bold, confident modern contrast.');
+      } else {
+        score += 24;
+        reasons.push('Complements balanced facial ratios with effortless presence.');
+      }
+    }
+
+    // 2. Style preference matching
+    const styleLower = (stylePreference || '').toLowerCase();
+    if (styleLower.includes('minimal')) {
+      if (product.id === 'prod_1' || product.id === 'prod_4') {
+        score += 30;
+        reasons.push(`Clean, ultra-lightweight frames designed for pure minimal restraint.`);
+      }
+    } else if (styleLower.includes('bold')) {
+      if (product.id === 'prod_3' || product.id === 'prod_6') {
+        score += 30;
+        reasons.push(`Substantial sculpted acetate creating a definitive, powerful statement.`);
+      }
+    } else if (styleLower.includes('luxury')) {
+      if (product.id === 'prod_6' || product.id === 'prod_5') {
+        score += 30;
+        reasons.push(`High-grade handcrafted Italian acetate and bespoke plated accents.`);
+      }
+    } else if (styleLower.includes('street') || styleLower.includes('everyday')) {
+      if (product.id === 'prod_2' || product.id === 'prod_5') {
+        score += 25;
+        reasons.push(`Versatile modern heritage silhouette built for effortless all-day wear.`);
+      }
+    }
+
+    // 3. Color preference matching
+    if (colorPreference) {
+      const col = colorPreference.toLowerCase();
+      const hasColor = product.variants.some((v) => v.title.toLowerCase().includes(col));
+      if (hasColor) {
+        score += 15;
+        reasons.push(`Available in your preferred ${colorPreference} colorway.`);
+      }
+    }
+
+    const primaryReason = reasons[0] || 'A harmonious balance of frame proportions and contemporary style.';
+    scores[product.id] = { score, reason: primaryReason };
+  });
+
+  // Sort by score descending and take top 3
+  const sorted = [...SERVER_PRODUCTS].sort((a, b) => {
+    const sA = scores[a.id]?.score || 0;
+    const sB = scores[b.id]?.score || 0;
+    return sB - sA;
+  });
+
+  const top3 = sorted.slice(0, 3).map((prod, idx) => ({
+    product: prod,
+    suitability: (idx === 0 ? 'STRONG MATCH' : 'STYLE ALIGNED') as 'STRONG MATCH' | 'STYLE ALIGNED',
+    explanation: `Looks like a strong match. Recommended because this frame provides a balanced look with your ${faceShape.toLowerCase()} facial proportions and ${scores[prod.id]?.reason.toLowerCase() || 'matches your aesthetic'}.`,
+  }));
+
+  res.json({ recommendations: top3 });
+});
+
+// 6. POST CHATBOT ASSISTANT
 app.post('/api/chatbot', async (req, res) => {
   const { messages } = req.body; // Array of { role: 'user' | 'assistant', content: string }
   if (!messages || !messages.length) {

@@ -15,6 +15,7 @@ interface HomeViewProps {
   onAddToCart: (product: Product, variantId?: string) => void;
   onSelectProduct: (product: Product) => void;
   onNavigate: (view: string, params?: any) => void;
+  onOpenAiAdvisor?: () => void;
 }
 
 export default function HomeView({
@@ -25,6 +26,7 @@ export default function HomeView({
   onAddToCart,
   onSelectProduct,
   onNavigate,
+  onOpenAiAdvisor,
 }: HomeViewProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const prefersReducedMotion = useReducedMotion();
@@ -154,25 +156,34 @@ export default function HomeView({
             </p>
           </motion.div>
 
-          {/* Strong Dual CTAs */}
+          {/* Strong Dual CTAs + Virtual Try-On Trigger */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md px-4"
+            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-xl px-4"
           >
             <button
               onClick={() => onNavigate('shop')}
-              className="w-full sm:w-auto min-w-[200px] bg-white text-black text-xs tracking-[0.25em] font-bold uppercase py-4 px-8 hover:bg-zinc-200 transition-all duration-300 flex items-center justify-center space-x-2 rounded-xs group shadow-xl"
+              className="w-full sm:w-auto min-w-[180px] bg-white text-black text-xs tracking-[0.25em] font-bold uppercase py-4 px-7 hover:bg-zinc-200 transition-all duration-300 flex items-center justify-center space-x-2 rounded-xs group shadow-xl"
             >
               <span>SHOP EYEWEAR</span>
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
             </button>
+            {onOpenAiAdvisor && (
+              <button
+                onClick={onOpenAiAdvisor}
+                className="w-full sm:w-auto min-w-[200px] bg-linear-to-r from-zinc-900 via-zinc-950 to-zinc-900 border border-zinc-700 text-white text-xs tracking-[0.22em] font-bold uppercase py-4 px-6 hover:border-zinc-500 hover:scale-102 transition-all duration-300 rounded-xs flex items-center justify-center space-x-2 shadow-lg"
+              >
+                <Sparkles className="w-4 h-4 text-emerald-400" />
+                <span>TRY ON IN 3D STUDIO</span>
+              </button>
+            )}
             <button
               onClick={() => onNavigate('shop', { filter: 'PREMIUM' })}
-              className="w-full sm:w-auto min-w-[200px] border border-white/40 bg-white/[0.03] backdrop-blur-sm text-white text-xs tracking-[0.25em] font-bold uppercase py-4 px-8 hover:bg-white hover:text-black hover:border-white transition-all duration-300 rounded-xs"
+              className="w-full sm:w-auto min-w-[160px] border border-white/30 bg-white/[0.03] backdrop-blur-sm text-white text-xs tracking-[0.22em] font-bold uppercase py-4 px-6 hover:bg-white hover:text-black hover:border-white transition-all duration-300 rounded-xs"
             >
-              EXPLORE COLLECTION
+              COLLECTION
             </button>
           </motion.div>
 
@@ -255,6 +266,117 @@ export default function HomeView({
                 onSelectProduct={onSelectProduct}
               />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3.5 DNYL AI STYLE ADVISOR & VIRTUAL TRY-ON SHOWCASE */}
+      <section id="ai-advisor-showcase" className="py-20 sm:py-24 bg-zinc-950 text-white relative border-y border-zinc-800/80 overflow-hidden">
+        <LightingOverlay intensity="subtle" position="absolute" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            
+            {/* Left Column: Vision & Feature Description */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[10px] tracking-[0.35em] text-emerald-400 font-extrabold uppercase font-sans">
+                  PROPRIETARY OPTICAL INTELLIGENCE
+                </span>
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight font-sans">
+                FIND YOUR FRAME.<br />
+                <span className="text-zinc-400 font-light italic font-display">POWERED BY DNYL AI.</span>
+              </h2>
+
+              <p className="text-zinc-300 text-xs sm:text-sm font-light leading-relaxed max-w-xl">
+                Discover the architectural silhouette crafted for your exact facial proportions. Our DNYL AI Style Advisor analyzes temple width, jawline balance, and symmetry to curate your 3 best matches—and projects them onto your face in our authentic Virtual Try-On Studio.
+              </p>
+
+              {/* 3 Core Pillars */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div className="border border-zinc-800 bg-zinc-900/50 p-3.5 rounded-xl">
+                  <span className="text-[9px] font-mono tracking-widest text-zinc-400 block mb-1">01 // GEOMETRY</span>
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">Facial Analysis</h4>
+                  <p className="text-[10px] text-zinc-400 mt-1">Identifies your face shape &amp; optical balance points.</p>
+                </div>
+                <div className="border border-zinc-800 bg-zinc-900/50 p-3.5 rounded-xl">
+                  <span className="text-[9px] font-mono tracking-widest text-zinc-400 block mb-1">02 // VIRTUAL TRY-ON</span>
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">True Identity</h4>
+                  <p className="text-[10px] text-zinc-400 mt-1">100% authentic identity preservation with polarized reflections.</p>
+                </div>
+                <div className="border border-zinc-800 bg-zinc-900/50 p-3.5 rounded-xl">
+                  <span className="text-[9px] font-mono tracking-widest text-zinc-400 block mb-1">03 // DNYL PICKS</span>
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">Top 3 Matches</h4>
+                  <p className="text-[10px] text-zinc-400 mt-1">Curated from actual DNYL catalog with styling justifications.</p>
+                </div>
+              </div>
+
+              {/* CTAs */}
+              <div className="pt-2 flex flex-wrap items-center gap-3">
+                {onOpenAiAdvisor && (
+                  <button
+                    onClick={onOpenAiAdvisor}
+                    className="px-6 py-3.5 bg-white text-black hover:bg-zinc-200 rounded-lg text-xs font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 shadow-lg"
+                  >
+                    <Sparkles className="w-4 h-4 text-black" />
+                    <span>LAUNCH AI STYLE ADVISOR</span>
+                  </button>
+                )}
+                <button
+                  onClick={() => onNavigate('shop')}
+                  className="px-6 py-3.5 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 rounded-lg text-xs font-bold uppercase tracking-[0.2em] transition-all"
+                >
+                  BROWSE ALL FRAMES
+                </button>
+              </div>
+
+              <p className="text-[10px] text-zinc-500 tracking-wide">
+                * Privacy first: Real-time ephemeral analysis. No permanent storage or biometric data sharing.
+              </p>
+            </div>
+
+            {/* Right Column: High-End Optical Frame Showcase */}
+            <div className="lg:col-span-5 relative flex justify-center">
+              <div className="relative w-full max-w-md aspect-square rounded-2xl bg-linear-to-b from-zinc-900 via-zinc-950 to-black border border-zinc-800 p-6 flex flex-col justify-between shadow-2xl overflow-hidden group">
+                <div className="flex items-center justify-between text-[9px] font-mono tracking-widest text-zinc-400 uppercase border-b border-zinc-800/80 pb-3">
+                  <span>DNYL // VIRTUAL STUDIO</span>
+                  <span className="text-emerald-400">READY</span>
+                </div>
+
+                <div className="relative my-auto flex items-center justify-center py-4">
+                  <div className="absolute inset-0 bg-radial-glow from-emerald-500/10 via-transparent to-transparent blur-2xl pointer-events-none" />
+                  <img
+                    src={DNYL_ASSETS.aviator}
+                    alt="DNYL Virtual Try-On Frame"
+                    referrerPolicy="no-referrer"
+                    className="w-full max-h-48 object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+
+                <div className="border-t border-zinc-800/80 pt-3 flex items-center justify-between">
+                  <div>
+                    <h5 className="text-xs font-extrabold uppercase tracking-wider text-white">
+                      MAVERICK AVIATOR
+                    </h5>
+                    <span className="text-[10px] text-zinc-400 font-medium">
+                      Aerospace Titanium // Polarized
+                    </span>
+                  </div>
+                  {onOpenAiAdvisor && (
+                    <button
+                      onClick={onOpenAiAdvisor}
+                      className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-[10px] font-bold uppercase tracking-wider border border-zinc-700 flex items-center gap-1"
+                    >
+                      <Sparkles className="w-3 h-3 text-emerald-400" />
+                      Try On
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>

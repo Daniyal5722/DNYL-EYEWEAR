@@ -1,7 +1,9 @@
 {
   "name": "DNYL Eyewear",
   "description": "Premium luxury sunglasses and modern eyewear brand based in Karachi, Pakistan. See different.",
-  "requestFramePermissions": [],
+  "requestFramePermissions": [
+    "camera"
+  ],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ]

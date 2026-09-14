@@ -87,3 +87,40 @@ export interface OrderTrackResult {
   subtotal: string;
   total: string;
 }
+
+export type FaceShape = 'Oval' | 'Round' | 'Square' | 'Rectangle' | 'Heart' | 'Diamond' | 'Oblong';
+
+export interface FacialLandmarks {
+  leftEye: { x: number; y: number };
+  rightEye: { x: number; y: number };
+  noseBridge: { x: number; y: number };
+  faceWidthPct: number;
+  tiltAngleDeg: number;
+}
+
+export interface FaceAnalysisResult {
+  faceShape: FaceShape;
+  faceProportions: string;
+  jawline: string;
+  cheekForeheadRatio: string;
+  recommendedFrameShapes: string[];
+  recommendedFrameProportions: string;
+  styleTip: string;
+  landmarks: FacialLandmarks;
+  isClearFace: boolean;
+  angleFeedback: string;
+  disclaimer: string;
+}
+
+export interface AdvisorRecommendation {
+  product: Product;
+  suitability: 'STRONG MATCH' | 'STYLE ALIGNED';
+  explanation: string;
+}
+
+export interface TryOnAdjustment {
+  scale: number;
+  xOffset: number;
+  yOffset: number;
+  rotation: number;
+}

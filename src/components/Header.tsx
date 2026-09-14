@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Heart, ShoppingBag, User, Menu, X } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu, X, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CartItem } from '../types';
 
@@ -11,6 +11,7 @@ interface HeaderProps {
   onOpenCart: () => void;
   onOpenSearch: () => void;
   onOpenWishlist: () => void;
+  onOpenAiAdvisor?: () => void;
 }
 
 export default function Header({
@@ -21,6 +22,7 @@ export default function Header({
   onOpenCart,
   onOpenSearch,
   onOpenWishlist,
+  onOpenAiAdvisor,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -117,6 +119,19 @@ export default function Header({
 
           {/* Right Action Icons */}
           <div id="header-actions" className="flex items-center space-x-1 sm:space-x-3">
+            {/* AI Style Advisor Trigger Button */}
+            {onOpenAiAdvisor && (
+              <button
+                id="header-ai-advisor-btn"
+                onClick={onOpenAiAdvisor}
+                className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-black/15 bg-zinc-950 text-white hover:bg-black hover:scale-102 transition-all text-[9.5px] font-extrabold tracking-[0.16em] uppercase shadow-xs select-none"
+                title="DNYL AI Style Advisor & Try-On"
+              >
+                <Sparkles className="w-3 h-3 text-emerald-400" />
+                <span>FIND MY FRAME</span>
+              </button>
+            )}
+
             {/* Search Button */}
             <button
               id="search-icon-btn"
@@ -227,7 +242,19 @@ export default function Header({
                     </button>
                   ))}
 
-                  <div className="pt-4 border-t border-gray-100">
+                  <div className="pt-4 border-t border-gray-100 space-y-2">
+                    {onOpenAiAdvisor && (
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          onOpenAiAdvisor();
+                        }}
+                        className="flex items-center space-x-2 w-full text-left text-xs tracking-[0.22em] font-extrabold py-2.5 px-3 bg-zinc-950 text-white rounded-md uppercase"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>FIND MY FRAME (AI ADVISOR)</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         setMobileMenuOpen(false);

@@ -14,6 +14,7 @@ interface ProductDetailViewProps {
   onSelectProduct: (product: Product) => void;
   onNavigate: (view: string, params?: any) => void;
   products: Product[]; // For related products recommendation
+  onOpenAiAdvisor?: (product: Product) => void;
 }
 
 export default function ProductDetailView({
@@ -25,6 +26,7 @@ export default function ProductDetailView({
   onSelectProduct,
   onNavigate,
   products,
+  onOpenAiAdvisor,
 }: ProductDetailViewProps) {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(product.variants[0]);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -295,6 +297,17 @@ export default function ProductDetailView({
                     <span>BUY IT NOW</span>
                   )}
                 </button>
+
+                {/* Virtual Try-On Trigger */}
+                {onOpenAiAdvisor && (
+                  <button
+                    onClick={() => onOpenAiAdvisor(product)}
+                    className="w-full bg-zinc-950 text-white py-3.5 text-xs tracking-[0.22em] font-extrabold hover:bg-zinc-800 transition-all duration-300 flex items-center justify-center space-x-2 border border-zinc-800 rounded-xs shadow-sm group"
+                  >
+                    <Sparkles className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+                    <span>VIRTUAL TRY-ON (DNYL STUDIO)</span>
+                  </button>
+                )}
               </div>
 
             </div>

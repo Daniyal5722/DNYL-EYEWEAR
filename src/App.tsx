@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Chatbot from './components/Chatbot';
+import AIAssistantButton from './components/AIAssistantButton';
+import AIAssistantModal from './components/AIAssistantModal';
 import CartDrawer from './components/CartDrawer';
 import SearchModal from './components/SearchModal';
 import WishlistDrawer from './components/WishlistDrawer';
@@ -42,6 +43,7 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [wishlistOpen, setWishlistOpen] = useState<boolean>(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [aiAdvisorOpen, setAiAdvisorOpen] = useState<boolean>(false);
 
   // Dynamic store configuration state
   const [whatsappNumber, setWhatsappNumber] = useState<string>('923001234567');
@@ -184,6 +186,7 @@ export default function App() {
         onOpenCart={() => setCartOpen(true)}
         onOpenSearch={() => setSearchOpen(true)}
         onOpenWishlist={() => setWishlistOpen(true)}
+        onOpenAiAdvisor={() => setAiAdvisorOpen(true)}
       />
 
       {/* 2. Main SPA View Render Router */}
@@ -197,6 +200,7 @@ export default function App() {
             onAddToCart={handleAddToCart}
             onSelectProduct={(p) => handleNavigate('product-detail', { product: p })}
             onNavigate={handleNavigate}
+            onOpenAiAdvisor={() => setAiAdvisorOpen(true)}
           />
         )}
 
@@ -222,6 +226,9 @@ export default function App() {
             onSelectProduct={(p) => handleNavigate('product-detail', { product: p })}
             onNavigate={handleNavigate}
             products={products}
+            onOpenAiAdvisor={(p) => {
+              setAiAdvisorOpen(true);
+            }}
           />
         )}
 
@@ -310,8 +317,16 @@ export default function App() {
         onAddToCart={handleAddToCart}
       />
 
-      {/* Floating AI Style Assistant (DNYL Chatbot) */}
-      <Chatbot
+      {/* Floating AI Style Advisor & Virtual Try-On Trigger Button */}
+      <AIAssistantButton
+        isOpen={aiAdvisorOpen}
+        onClick={() => setAiAdvisorOpen(true)}
+      />
+
+      {/* DNYL AI Style Advisor & Virtual Try-On Studio Modal */}
+      <AIAssistantModal
+        isOpen={aiAdvisorOpen}
+        onClose={() => setAiAdvisorOpen(false)}
         products={products}
         onSelectProduct={(p) => handleNavigate('product-detail', { product: p })}
         onAddToCart={handleAddToCart}

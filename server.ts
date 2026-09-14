@@ -341,6 +341,29 @@ async function queryShopify(query: string, variables: any = {}) {
   return result.data;
 }
 
+// CONFIGURATION ENDPOINT (Returns public store contact & integration info)
+app.get('/api/config', (req, res) => {
+  const domain = process.env.SHOPIFY_STORE_DOMAIN || '';
+  const isShopifyConfigured = Boolean(
+    domain && 
+    !domain.includes('your-shop-name') && 
+    process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN && 
+    !process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN.includes('your-storefront-access-token')
+  );
+
+  res.json({
+    whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '923001234567',
+    supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@dnyleyewear.com',
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || '',
+    gaId: process.env.NEXT_PUBLIC_GA_ID || '',
+    metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID || '',
+    shopifyConfigured: isShopifyConfigured,
+    brandName: 'DNYL Eyewear',
+    country: 'Pakistan',
+    currency: 'PKR',
+  });
+});
+
 // 1. GET ALL PRODUCTS
 app.get('/api/products', async (req, res) => {
   try {

@@ -53,7 +53,7 @@ export default function ProductCard({
   return (
     <div
       id={`product-card-${product.id}`}
-      className="group relative bg-white border border-gray-100 flex flex-col justify-between overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.03)]"
+      className="group relative bg-white border border-gray-100 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_16px_36px_rgba(0,0,0,0.06)] rounded-sm"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => onSelectProduct(product)}
@@ -65,7 +65,7 @@ export default function ProductCard({
     >
       
       {/* Product Image Stage */}
-      <div className="relative aspect-[1/1] overflow-hidden bg-gray-50">
+      <div className="relative aspect-[1/1] overflow-hidden bg-zinc-50 flex items-center justify-center">
         <motion.img
           key={displayImage}
           initial={{ opacity: 0.9 }}
@@ -73,41 +73,16 @@ export default function ProductCard({
           src={displayImage}
           alt={product.title}
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-center transition-all duration-700 ease-out transform group-hover:scale-105"
+          className="w-full h-full object-cover object-center transition-all duration-700 ease-out transform group-hover:scale-105 filter drop-shadow-sm"
           loading="lazy"
         />
 
         {/* Discount Badge */}
         {discountPercent > 0 && (
-          <div className="absolute top-3 left-3 bg-black text-white text-[8px] font-semibold tracking-widest px-2 py-1 uppercase rounded-sm">
+          <div className="absolute top-3 left-3 bg-black text-white text-[8px] font-bold tracking-widest px-2.5 py-1 uppercase rounded-xs z-10">
             {discountPercent}% OFF
           </div>
         )}
-
-        {/* Overlay Action Buttons (visible on hover on desktop) */}
-        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-2">
-          {/* Quick View */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onQuickView(product);
-            }}
-            className="p-3 bg-white text-black hover:bg-black hover:text-white transition-colors duration-300 rounded-full shadow-md focus:outline-none"
-            aria-label="Quick View details"
-          >
-            <Eye className="w-4 h-4" />
-          </button>
-
-          {/* Quick Add To Cart */}
-          <button
-            onClick={handleQuickAdd}
-            disabled={isAdding}
-            className="p-3 bg-white text-black hover:bg-black hover:text-white transition-colors duration-300 rounded-full shadow-md focus:outline-none disabled:opacity-50"
-            aria-label="Quick Add to Cart"
-          >
-            <ShoppingBag className="w-4 h-4" />
-          </button>
-        </div>
 
         {/* Floating Heart Button */}
         <button
@@ -115,28 +90,65 @@ export default function ProductCard({
             e.stopPropagation();
             onToggleWishlist(product);
           }}
-          className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-md rounded-full text-black hover:bg-white hover:scale-110 transition-all shadow-sm focus:outline-none z-10"
+          className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full text-black hover:bg-white hover:scale-110 transition-all shadow-sm focus:outline-none z-10"
           aria-label={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
         >
           <Heart
-            className={`w-4 h-4 stroke-[1.5] transition-all ${
+            className={`w-3.5 h-3.5 stroke-[1.5] transition-all ${
               isWishlisted ? 'fill-red-500 stroke-red-500 scale-110' : 'text-gray-700'
             }`}
           />
         </button>
+
+        {/* Desktop Slide-up Action Ribbon on Hover */}
+        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-center justify-between gap-2 z-10">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onQuickView(product);
+            }}
+            className="flex-1 bg-white/90 backdrop-blur-md text-black text-[9px] font-bold tracking-[0.2em] py-2 px-3 uppercase hover:bg-white transition-colors text-center rounded-xs flex items-center justify-center space-x-1"
+            aria-label="Quick View"
+          >
+            <Eye className="w-3 h-3" />
+            <span>VIEW</span>
+          </button>
+          <button
+            onClick={handleQuickAdd}
+            disabled={isAdding}
+            className="flex-1 bg-black text-white text-[9px] font-bold tracking-[0.2em] py-2 px-3 uppercase hover:bg-zinc-800 transition-colors text-center rounded-xs flex items-center justify-center space-x-1 disabled:opacity-50"
+            aria-label="Add to Bag"
+          >
+            <ShoppingBag className="w-3 h-3" />
+            <span>{isAdding ? 'ADDING...' : 'ADD'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Info Box */}
-      <div className="p-4 flex flex-col flex-1 justify-between">
-        <div className="mb-2">
-          <p className="text-[10px] tracking-[0.2em] text-gray-400 font-semibold uppercase">{product.productType || 'EYEWEAR'}</p>
-          <h3 className="text-xs font-semibold tracking-wider text-gray-900 mt-1 uppercase group-hover:text-black line-clamp-1">
+      <div className="p-4 flex flex-col flex-1 justify-between bg-white">
+        <div className="mb-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] tracking-[0.22em] text-gray-400 font-bold uppercase">
+              {product.productType || 'SUNGLASSES'}
+            </span>
+            <span className="text-[8px] font-mono tracking-wider text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">
+              POLARIZED
+            </span>
+          </div>
+
+          <h3 className="text-xs font-bold tracking-wider text-gray-900 mt-1 uppercase group-hover:text-black line-clamp-1">
             {product.title}
           </h3>
 
+          {/* Short specs tagline */}
+          <p className="text-[10px] text-gray-500 font-light mt-1 line-clamp-1">
+            {product.metafields?.find((m) => m.key === 'frame_material')?.value || 'Italian Acetate & Titanium Wire'}
+          </p>
+
           {/* Color Swatches if multiple variants exist */}
           {product.variants.length > 1 && (
-            <div className="flex items-center space-x-1.5 mt-2">
+            <div className="flex items-center space-x-1.5 mt-2.5">
               {product.variants.map((v, vIdx) => (
                 <button
                   key={v.id}
@@ -154,21 +166,21 @@ export default function ProductCard({
                   aria-label={`Select ${v.title}`}
                 >
                   <span 
-                    className="block w-full h-full rounded-full"
+                    className="block w-full h-full rounded-full shadow-inner"
                     style={{ backgroundColor: v.colorHex || '#000000' }}
                   />
                 </button>
               ))}
-              <span className="text-[9px] text-gray-400 tracking-wider font-light uppercase pl-1">
-                {product.variants.length} colours
+              <span className="text-[8.5px] text-gray-400 tracking-wider font-medium uppercase pl-1">
+                {product.variants.length} COLOURWAYS
               </span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-50">
+        <div className="flex items-center justify-between mt-auto pt-2.5 border-t border-gray-100">
           {/* Price Container */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-baseline space-x-2">
             <span className="text-xs font-bold text-black tracking-wider">
               Rs. {price.toLocaleString()}
             </span>
@@ -179,11 +191,11 @@ export default function ProductCard({
             )}
           </div>
 
-          {/* Mobile visible action (Quick Add on bottom) */}
+          {/* Mobile direct Add to Cart button */}
           <button
             onClick={handleQuickAdd}
             disabled={isAdding}
-            className="md:hidden p-1.5 text-black hover:bg-gray-100 rounded-md focus:outline-none"
+            className="sm:hidden p-1.5 text-black hover:bg-gray-100 rounded focus:outline-none"
             aria-label="Add to cart"
           >
             <ShoppingBag className="w-4 h-4" />

@@ -7,6 +7,7 @@ import { BLOG_POSTS, FAQS, DNYL_ASSETS } from '../../data';
 interface EditorialProps {
   onNavigate: (view: string, params?: any) => void;
   whatsappNumber: string;
+  supportEmail?: string;
 }
 
 // ==========================================
@@ -81,7 +82,7 @@ export function AboutView({ onNavigate }: EditorialProps) {
 // ==========================================
 // 2. CONTACT VIEW
 // ==========================================
-export function ContactView({ whatsappNumber }: EditorialProps) {
+export function ContactView({ whatsappNumber, supportEmail = 'support@dnyleyewear.com' }: EditorialProps) {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
 
@@ -114,7 +115,7 @@ export function ContactView({ whatsappNumber }: EditorialProps) {
             </div>
             <div>
               <p className="font-bold text-black uppercase tracking-wider">GENERAL INQUIRIES</p>
-              <a href="mailto:support@dnyleyewear.com" className="hover:text-black">support@dnyleyewear.com</a>
+              <a href={`mailto:${supportEmail}`} className="hover:text-black">{supportEmail}</a>
             </div>
           </div>
 
@@ -123,8 +124,10 @@ export function ContactView({ whatsappNumber }: EditorialProps) {
               <Phone className="w-4 h-4" />
             </div>
             <div>
-              <p className="font-bold text-black uppercase tracking-wider">WHATSAPP SUPORT LINE</p>
-              <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-black font-semibold">+92 300 1234567</a>
+              <p className="font-bold text-black uppercase tracking-wider">WHATSAPP SUPPORT LINE</p>
+              <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-black font-semibold">
+                +{whatsappNumber}
+              </a>
             </div>
           </div>
 

@@ -29,9 +29,18 @@ export default function ProductDetailView({
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(product.variants[0]);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState<'details' | 'specs' | 'shipping' | 'warranty'>('details');
+  const [activeTab, setActiveTab] = useState<'details' | 'shipping' | 'warranty'>('details');
   const [isAdded, setIsAdded] = useState(false);
   const [isDirectBuying, setIsDirectBuying] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((e.clientX - left) / width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - top) / height) * 100));
+    setZoomPos({ x, y });
+  };
 
   // Specifications metadata
   const metadata = product.metafields || [];
@@ -107,8 +116,13 @@ export default function ProductDetailView({
           {/* Left Column: Multi-Image Showcase */}
           <div className="lg:col-span-7 space-y-4">
             
-            {/* Primary Frame */}
-            <div className="relative aspect-[1/1] bg-gray-50 overflow-hidden border border-gray-100 rounded-md group">
+            {/* Primary Frame with Interactive Precision Zoom */}
+            <div 
+              className="relative aspect-[1/1] bg-zinc-50 overflow-hidden border border-gray-100 rounded-sm cursor-crosshair group select-none"
+              onMouseEnter={() => setIsZoomed(true)}
+              onMouseLeave={() => setIsZoomed(false)}
+              onMouseMove={handleMouseMove}
+            >
               <motion.img
                 key={activeImageIndex}
                 initial={{ opacity: 0 }}
@@ -116,13 +130,21 @@ export default function ProductDetailView({
                 src={product.images[activeImageIndex]?.url}
                 alt={product.title}
                 referrerPolicy="no-referrer"
-                className="w-full h-full object-cover object-center transition-all duration-700 ease-out"
+                style={{
+                  transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                  transform: isZoomed ? 'scale(2.2)' : 'scale(1)',
+                }}
+                className="w-full h-full object-cover object-center transition-transform duration-150 ease-out"
               />
               {discountPercent > 0 && (
-                <span className="absolute top-4 left-4 bg-black text-white text-[8px] font-bold tracking-widest px-2.5 py-1 uppercase rounded-sm">
+                <span className="absolute top-4 left-4 bg-black text-white text-[8px] font-bold tracking-widest px-2.5 py-1 uppercase rounded-xs z-10 pointer-events-none">
                   {discountPercent}% OFF
                 </span>
               )}
+              {/* Inspection Magnifier Badge */}
+              <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-white text-[8.5px] font-mono tracking-widest px-2.5 py-1 uppercase rounded-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                {isZoomed ? '2.2X OPTICAL ZOOM' : 'HOVER TO INSPECT'}
+              </div>
             </div>
 
             {/* Thumbnail Navigation Row */}

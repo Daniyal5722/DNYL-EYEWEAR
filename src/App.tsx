@@ -7,6 +7,7 @@ import SearchModal from './components/SearchModal';
 import WishlistDrawer from './components/WishlistDrawer';
 import ProductQuickView from './components/ProductQuickView';
 import LightingOverlay from './components/LightingOverlay';
+import CustomCursor from './components/CustomCursor';
 
 // Import Views
 import HomeView from './components/views/HomeView';
@@ -42,25 +43,36 @@ export default function App() {
   const [wishlistOpen, setWishlistOpen] = useState<boolean>(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
-  // Fallback variables
-  const whatsappNumber = '923001234567';
+  // Dynamic store configuration state
+  const [whatsappNumber, setWhatsappNumber] = useState<string>('923001234567');
+  const [supportEmail, setSupportEmail] = useState<string>('support@dnyleyewear.com');
 
-  // 1. Fetch live products from the server-side Shopify/local catalog API on mount
+  // 1. Fetch live products and configuration from server on mount
   useEffect(() => {
-    async function fetchProducts() {
+    async function fetchStoreData() {
       try {
-        const res = await fetch('/api/products');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.products && data.products.length > 0) {
-            setProducts(data.products);
+        const [prodRes, configRes] = await Promise.allSettled([
+          fetch('/api/products'),
+          fetch('/api/config')
+        ]);
+
+        if (prodRes.status === 'fulfilled' && prodRes.value.ok) {
+          const prodData = await prodRes.value.json();
+          if (prodData.products && prodData.products.length > 0) {
+            setProducts(prodData.products);
           }
         }
+
+        if (configRes.status === 'fulfilled' && configRes.value.ok) {
+          const configData = await configRes.value.json();
+          if (configData.whatsappNumber) setWhatsappNumber(configData.whatsappNumber);
+          if (configData.supportEmail) setSupportEmail(configData.supportEmail);
+        }
       } catch (err) {
-        console.warn('API error fetching products, using client-side high-fidelity fallback catalogs:', err);
+        console.warn('API error fetching products or config, using client defaults:', err);
       }
     }
-    fetchProducts();
+    fetchStoreData();
   }, []);
 
   // 2. Load Cart and Wishlist from localStorage on mount
@@ -157,6 +169,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col font-sans antialiased selection:bg-black selection:text-white relative">
+      {/* Luxury Minimalist Follow Cursor */}
+      <CustomCursor />
+
       {/* Cinematic Studio Lighting Overlay (radial gradient glow with mix-blend-mode: screen) */}
       <LightingOverlay intensity="medium" position="fixed" />
       
@@ -215,7 +230,7 @@ export default function App() {
         )}
 
         {currentView === 'contact' && (
-          <ContactView onNavigate={handleNavigate} whatsappNumber={whatsappNumber} />
+          <ContactView onNavigate={handleNavigate} whatsappNumber={whatsappNumber} supportEmail={supportEmail} />
         )}
 
         {currentView === 'faq' && <FAQView />}

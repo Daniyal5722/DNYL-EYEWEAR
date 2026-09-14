@@ -23,12 +23,25 @@ export default function Header({
   onOpenWishlist,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
+  // Monitor window scroll to shift from transparent/light-blur to solid elevated header
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 24) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const navLinks = [
-    { label: 'SHOP', view: 'shop' },
-    { label: 'NEW ARRIVALS', view: 'shop', params: { filter: 'NEW ARRIVALS' } },
-    { label: 'BEST SELLERS', view: 'shop', params: { filter: 'BEST SELLERS' } },
+    { label: 'HOME', view: 'home' },
+    { label: 'COLLECTION', view: 'shop' },
     { label: 'ABOUT', view: 'about' },
     { label: 'CONTACT', view: 'contact' },
   ];
@@ -36,21 +49,29 @@ export default function Header({
   return (
     <>
       {/* Top Banner */}
-      <div id="promo-banner" className="bg-black text-white text-center text-[10px] tracking-[0.2em] py-2 font-medium">
-        FREE PREMIUM NATIONWIDE DELIVERY | CASH ON DELIVERY ACROSS PAKISTAN
+      <div id="promo-banner" className="bg-black text-white text-center text-[10px] tracking-[0.22em] py-2 px-4 font-medium select-none flex items-center justify-center space-x-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+        <span>FREE NATIONWIDE EXPRESS DELIVERY | CASH ON DELIVERY (COD) ACROSS PAKISTAN</span>
       </div>
 
-      <header id="main-header" className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <header
+        id="main-header"
+        className={`sticky top-0 z-40 transition-all duration-500 ${
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-[0_4px_30px_rgba(0,0,0,0.03)] py-1'
+            : 'bg-white/90 backdrop-blur-md border-b border-gray-100/60 py-2'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           
           {/* Mobile Menu Icon */}
           <button
             id="mobile-menu-trigger"
             onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden p-2 text-black hover:opacity-70 focus:outline-none focus:ring-1 focus:ring-black"
+            className="md:hidden p-2 -ml-2 text-black hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-black rounded"
             aria-label="Open navigation menu"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5 stroke-[1.5]" />
           </button>
 
           {/* Left Brand Logo */}
@@ -58,12 +79,12 @@ export default function Header({
             <button
               id="brand-logo-btn"
               onClick={() => onNavigate('home')}
-              className="flex flex-col items-center justify-center group focus:outline-none"
+              className="flex flex-col items-center md:items-start justify-center group focus:outline-none"
             >
-              <span className="text-2xl font-bold tracking-[0.25em] text-black transition-all group-hover:tracking-[0.3em]">
+              <span className="text-xl sm:text-2xl font-black tracking-[0.28em] text-black transition-all group-hover:tracking-[0.32em] font-sans">
                 DNYL
               </span>
-              <span className="text-[8px] tracking-[0.55em] font-medium text-gray-500 mt-[-2px] ml-[0.3em]">
+              <span className="text-[7.5px] tracking-[0.55em] font-semibold text-gray-500 mt-[-3px] ml-[0.3em]">
                 EYEWEAR
               </span>
             </button>
@@ -71,21 +92,27 @@ export default function Header({
 
           {/* Desktop Core Navigation Links */}
           <nav id="desktop-nav" className="hidden md:flex items-center space-x-8 lg:space-x-12">
-            {navLinks.map((link) => (
-              <button
-                key={link.label}
-                onClick={() => {
-                  onNavigate(link.view, link.params);
-                }}
-                className={`text-xs tracking-[0.2em] font-medium transition-all py-2 border-b-2 hover:border-black ${
-                  currentView === link.view && (!link.params || JSON.stringify(link.params) === JSON.stringify(window.location.hash)) // Simple match indicator
-                    ? 'border-black text-black'
-                    : 'border-transparent text-gray-500 hover:text-black'
-                }`}
-              >
-                {link.label}
-              </button>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = currentView === link.view;
+              return (
+                <button
+                  key={link.label}
+                  onClick={() => onNavigate(link.view)}
+                  className="relative text-[11px] tracking-[0.22em] font-semibold transition-colors py-2 text-gray-600 hover:text-black focus:outline-none"
+                >
+                  <span className={isActive ? 'text-black font-bold' : ''}>
+                    {link.label}
+                  </span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeNavIndicator"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-black"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </nav>
 
           {/* Right Action Icons */}
@@ -94,27 +121,17 @@ export default function Header({
             <button
               id="search-icon-btn"
               onClick={onOpenSearch}
-              className="p-2 text-black hover:opacity-60 transition-opacity focus:outline-none"
+              className="p-2 text-black hover:opacity-60 transition-opacity focus:outline-none rounded-full"
               aria-label="Search collection"
             >
               <Search className="w-5 h-5 stroke-[1.5]" />
-            </button>
-
-            {/* Account Button */}
-            <button
-              id="account-icon-btn"
-              onClick={() => onNavigate('account')}
-              className="hidden sm:inline-flex p-2 text-black hover:opacity-60 transition-opacity focus:outline-none"
-              aria-label="My Account"
-            >
-              <User className="w-5 h-5 stroke-[1.5]" />
             </button>
 
             {/* Wishlist Button */}
             <button
               id="wishlist-icon-btn"
               onClick={onOpenWishlist}
-              className="p-2 text-black hover:opacity-60 transition-opacity relative focus:outline-none"
+              className="p-2 text-black hover:opacity-60 transition-opacity relative focus:outline-none rounded-full"
               aria-label="My Wishlist"
             >
               <Heart className="w-5 h-5 stroke-[1.5]" />
@@ -129,7 +146,7 @@ export default function Header({
             <button
               id="cart-icon-btn"
               onClick={onOpenCart}
-              className="p-2 text-black hover:opacity-60 transition-opacity relative focus:outline-none"
+              className="p-2 text-black hover:opacity-60 transition-opacity relative focus:outline-none rounded-full"
               aria-label="Open Shopping Cart"
             >
               <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
@@ -157,10 +174,10 @@ export default function Header({
             <motion.div
               id="mobile-nav-backdrop"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 z-50 bg-black"
+              className="fixed inset-0 z-50 bg-black backdrop-blur-sm"
             />
 
             {/* Mobile Slide Panel */}
@@ -169,68 +186,91 @@ export default function Header({
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 left-0 bottom-0 z-50 w-[80vw] max-w-[360px] bg-white text-black p-6 flex flex-col justify-between"
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed top-0 left-0 bottom-0 z-50 w-[84vw] max-w-[340px] bg-white text-black p-6 flex flex-col justify-between shadow-2xl"
             >
               <div>
-                <div className="flex items-center justify-between pb-8 border-b border-gray-100">
+                <div className="flex items-center justify-between pb-6 border-b border-gray-100">
                   <div className="flex flex-col">
-                    <span className="text-xl font-bold tracking-[0.2em]">DNYL</span>
-                    <span className="text-[7px] tracking-[0.5em] text-gray-500 mt-[-2px] ml-[0.3em]">EYEWEAR</span>
+                    <span className="text-xl font-black tracking-[0.25em] font-sans">DNYL</span>
+                    <span className="text-[7px] tracking-[0.55em] font-bold text-gray-500 mt-[-2px] ml-[0.3em]">EYEWEAR</span>
                   </div>
                   <button
                     id="mobile-nav-close"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 text-black focus:outline-none"
-                    aria-label="Close menu"
+                    className="p-2 text-black hover:opacity-60 focus:outline-none"
+                    aria-label="Close navigation menu"
                   >
-                    <X className="w-6 h-6 stroke-[1.5]" />
+                    <X className="w-5 h-5 stroke-[1.5]" />
                   </button>
                 </div>
 
-                <nav id="mobile-nav-links" className="mt-8 space-y-6">
+                <div className="mt-4 py-2 text-[9px] tracking-[0.2em] font-bold text-gray-400 uppercase">
+                  SEE DIFFERENT.
+                </div>
+
+                <nav id="mobile-nav-links" className="mt-4 space-y-4">
                   {navLinks.map((link) => (
                     <button
                       key={link.label}
                       onClick={() => {
                         setMobileMenuOpen(false);
-                        onNavigate(link.view, link.params);
+                        onNavigate(link.view);
                       }}
-                      className="block w-full text-left text-sm tracking-[0.2em] font-medium py-2 text-gray-800 hover:text-black hover:pl-2 transition-all duration-300 border-l border-transparent hover:border-black"
+                      className={`block w-full text-left text-xs tracking-[0.22em] font-bold py-2.5 transition-all ${
+                        currentView === link.view
+                          ? 'text-black border-l-2 border-black pl-3'
+                          : 'text-gray-600 hover:text-black hover:pl-2'
+                      }`}
                     >
                       {link.label}
                     </button>
                   ))}
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onNavigate('account');
-                    }}
-                    className="block w-full text-left text-sm tracking-[0.2em] font-medium py-2 text-gray-800 hover:text-black hover:pl-2 transition-all duration-300 border-l border-transparent hover:border-black"
-                  >
-                    MY ACCOUNT
-                  </button>
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onNavigate('track-order');
-                    }}
-                    className="block w-full text-left text-sm tracking-[0.2em] font-medium py-2 text-gray-800 hover:text-black hover:pl-2 transition-all duration-300 border-l border-transparent hover:border-black"
-                  >
-                    TRACK ORDER
-                  </button>
+
+                  <div className="pt-4 border-t border-gray-100">
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        onNavigate('shop', { filter: 'NEW ARRIVALS' });
+                      }}
+                      className="block w-full text-left text-xs tracking-[0.22em] font-semibold py-2 text-gray-600 hover:text-black"
+                    >
+                      NEW ARRIVALS
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        onNavigate('shop', { filter: 'BEST SELLERS' });
+                      }}
+                      className="block w-full text-left text-xs tracking-[0.22em] font-semibold py-2 text-gray-600 hover:text-black"
+                    >
+                      BEST SELLERS
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        onNavigate('track-order');
+                      }}
+                      className="block w-full text-left text-xs tracking-[0.22em] font-semibold py-2 text-gray-600 hover:text-black"
+                    >
+                      TRACK ORDER
+                    </button>
+                  </div>
                 </nav>
               </div>
 
               <div className="border-t border-gray-100 pt-6">
-                <p className="text-[10px] tracking-[0.1em] text-gray-400 font-semibold uppercase">SUPPORT</p>
+                <div className="flex items-center justify-between text-[10px] tracking-wider text-gray-400 mb-2">
+                  <span>REGION: PAKISTAN</span>
+                  <span>PKR (Rs.)</span>
+                </div>
                 <a
                   href="mailto:support@dnyleyewear.com"
-                  className="block text-xs text-gray-600 mt-2 hover:text-black"
+                  className="block text-xs font-semibold text-gray-800 hover:text-black tracking-wide"
                 >
                   support@dnyleyewear.com
                 </a>
-                <p className="text-[10px] text-gray-400 mt-4">DNYL Eyewear — SEE DIFFERENT.</p>
+                <p className="text-[9px] text-gray-400 mt-2">DNYL Eyewear &copy; 2026. All rights reserved.</p>
               </div>
             </motion.div>
           </>
